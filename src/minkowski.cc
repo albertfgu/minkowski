@@ -110,7 +110,7 @@ void Minkowski::epoch_thread(int32_t thread_id, int32_t seed, real start_lr, rea
     std::minstd_rand rng(seed);
     std::ifstream ifs(args_->input);
     utils::seek(ifs, thread_id * utils::size(ifs) / args_->threads);
-    Model model(vectors_, args_);
+    Model model(vectors_, lengths_, bias_, args_);
 
     // number of tokens that this thread should process
     const int64_t max_tokens = dict_->ntokens_ / args_->threads;
@@ -156,9 +156,13 @@ void Minkowski::train() {
     std::minstd_rand rng(args_->seed);
     Vector init_vector(args_->dimension);
     vectors_ = std::make_shared<std::vector<Vector>>();
+    lengths_ = std::make_shared<std::vector<real>>();
+    bias_ = std::make_shared<std::vector<real>>();
     for (int64_t i=0; i < dict_->nwords_; i++) {
         random_hyperboloid_point(init_vector, rng, args_->init_std_dev);
         vectors_->push_back(init_vector);
+        lengths_->push_back(1.0);
+        bias_->push_back(1.0);
     }
     vector_flags_ = std::shared_ptr<std::vector<std::mutex>>(new std::vector<std::mutex>(vectors_->size()));
     // do any burn-in epochs

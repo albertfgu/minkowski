@@ -9,8 +9,10 @@ from hyperboloid_helpers.manifold import *
 from hyperboloid_helpers.analogy import *
 from hyperboloid_helpers.fasttext import *
 
-SIMILARITY_DIR = '/home/ubuntu/eval-word-vectors/data/word-sim/'
+SIMILARITY_DIR = '/dfs/scratch1/albertgu/baseline-minkowski/python/testsets/word-sim/'
 DATASETS = ['EN-WS-353-ALL.txt', 'EN-SIMLEX-999.txt', 'EN-MEN-TR-3k.txt']
+# SIMILARITY_DIR = '/dfs/scratch1/albertgu/baseline-minkowski/python/testsets/ws/'
+# DATASETS = ['simlex999.txt', 'ws353_relatedness.txt', 'ws353_similarity.txt', 'ws353.txt', 'bruni_men.txt', 'luong_rare.txt', 'radinsky_mturk.txt']
 
 def normalize(array, l=2, axis=None, return_norm=False):
     div = np.linalg.norm(array, ord=l, axis=axis, keepdims=True)
@@ -98,29 +100,33 @@ def run_similarity_evaluation(hyperbolic_files, euclidean_files):
         print(hyperbolic_sim[f])
         print('\n\n')
 
-    for f in euclidean_files:
-        print(f)
-        rhos, weights = evaluate_similarity(f, False)
-        euclidean_sim[f] = np.average(rhos, weights=weights)
-        print(euclidean_sim[f])
-        print('\n\n')
+    # for f in euclidean_files:
+    #     print(f)
+    #     rhos, weights = evaluate_similarity(f, False)
+    #     euclidean_sim[f] = np.average(rhos, weights=weights)
+    #     print(euclidean_sim[f])
+    #     print('\n\n')
 
     with open('results_similarity.txt', 'w') as f:
         for k in hyperbolic_sim:
             f.write('{}\t{}\n'.format(k, hyperbolic_sim[k]))
-        for k in euclidean_sim:
-            f.write('{}\t{}\n'.format(k, euclidean_sim[k]))
+        # for k in euclidean_sim:
+        #     f.write('{}\t{}\n'.format(k, euclidean_sim[k]))
 
     return hyperbolic_sim, euclidean_sim
 
 
 if __name__ == '__main__':
 
-    hyperbolic_files = glob.glob('*vecs-wikipedia-hyperbolic*.csv')
-    euclidean_files = glob.glob('*vecs-wikipedia-euclidean*.vec')
+    # hyperbolic_files = glob.glob('*vecs-wikipedia-hyperbolic*.csv')
+    hyperbolic_files = glob.glob('*vecs-wikipedia_clean-hyperbolic*.csv')
+    # hyperbolic_files = glob.glob('*vecs-wikipedia-hyperbolic-dim-5-*.csv')
+    # hyperbolic_files = glob.glob('*newgrad*.csv.*')
+    # euclidean_files = glob.glob('*vecs-wikipedia-euclidean*.vec')
 
     hyperbolic_files.sort()
-    euclidean_files.sort()
+    # euclidean_files.sort()
+    euclidean_files = []
 
     print('Evaluating similarity task.')
     hyperbolic_sim, euclidean_sim = run_similarity_evaluation(hyperbolic_files=hyperbolic_files,

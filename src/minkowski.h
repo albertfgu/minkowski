@@ -25,6 +25,8 @@ protected:
     std::shared_ptr<Dictionary> dict_;
 
     std::shared_ptr<std::vector<Vector>> vectors_;
+    std::shared_ptr<std::vector<real>> lengths_;
+    std::shared_ptr<std::vector<real>> bias_;
     std::shared_ptr<std::vector<std::mutex>> vector_flags_;
 
     std::shared_ptr<std::vector<int32_t>> negatives_;

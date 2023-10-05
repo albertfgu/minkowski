@@ -2,7 +2,7 @@
 from hyperboloid_helpers.analogy import *
 from hyperboloid_helpers.fasttext import *
 
-ANALOGY_QUESTIONS_FILE = '/home/ubuntu/data/questions-words.txt'
+ANALOGY_QUESTIONS_FILE = '/dfs/scratch1/albertgu/skipgram-products/python/testsets/analogy/questions-words_sample.txt'
 
 
 def normalize(array, l=2, axis=None, return_norm=False):
@@ -38,9 +38,12 @@ def compute_accuracy_euclidean(word_vecs, questions):
         w3 = q[3].lower()
 
         try:
-            vec0 = normalize(np.array(word_vecs.loc[w0]), l=2)
-            vec1 = normalize(np.array(word_vecs.loc[w1]), l=2)
-            vec2 = normalize(np.array(word_vecs.loc[w2]), l=2)
+            # vec0 = normalize(np.array(word_vecs.loc[w0]), l=2)
+            # vec1 = normalize(np.array(word_vecs.loc[w1]), l=2)
+            # vec2 = normalize(np.array(word_vecs.loc[w2]), l=2)
+            vec0 = np.array(word_vecs.loc[w0])
+            vec1 = np.array(word_vecs.loc[w1])
+            vec2 = np.array(word_vecs.loc[w2])
 
             left_side = vec1 - vec0 + vec2
             cos_sim = np.dot(left_side, vecs.T)
@@ -150,15 +153,16 @@ def run_analogy_evaluation(hyperbolic_files, euclidean_files):
 
 if __name__ == '__main__':
 
-    hyperbolic_files = ['vecs-wikipedia-hyperbolic-dim-100-epochs-3-lr-0.01-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv',
-                        'vecs-wikipedia-hyperbolic-dim-20-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv',
-                        'vecs-wikipedia-hyperbolic-dim-5-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv',
-                        'vecs-wikipedia-hyperbolic-dim-50-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv']
+    # hyperbolic_files = ['vecs-wikipedia-hyperbolic-dim-100-epochs-3-lr-0.01-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv',
+    #                     'vecs-wikipedia-hyperbolic-dim-20-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv',
+    #                     'vecs-wikipedia-hyperbolic-dim-5-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv',
+    #                     'vecs-wikipedia-hyperbolic-dim-50-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10-initStddev-0.01.csv']
+    hyperbolic_files = []
 
-    euclidean_files = ['vecs-wikipedia-euclidean-dim-100-epochs-3-lr-0.05-t-1e-05-ws-10-minCount-15-neg-10.vec',
-                       'vecs-wikipedia-euclidean-dim-20-epochs-3-lr-0.01-t-1e-05-ws-10-minCount-15-neg-10.vec',
-                       'vecs-wikipedia-euclidean-dim-5-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10.vec',
-                       'vecs-wikipedia-euclidean-dim-50-epochs-3-lr-0.1-t-1e-05-ws-10-minCount-15-neg-10.vec']
+    euclidean_files = ['hyperbolic_skipgram_arxiv/vecs-wikipedia-euclidean-dim-100-epochs-3-lr-0.05-t-1e-05-ws-10-minCount-15-neg-10.vec',
+                       'hyperbolic_skipgram_arxiv/vecs-wikipedia-euclidean-dim-20-epochs-3-lr-0.01-t-1e-05-ws-10-minCount-15-neg-10.vec',
+                       'hyperbolic_skipgram_arxiv/vecs-wikipedia-euclidean-dim-5-epochs-3-lr-0.005-t-1e-05-ws-10-minCount-15-neg-10.vec',
+                       'hyperbolic_skipgram_arxiv/vecs-wikipedia-euclidean-dim-50-epochs-3-lr-0.1-t-1e-05-ws-10-minCount-15-neg-10.vec']
 
     hyperbolic_analogy, euclidean_analogy = run_analogy_evaluation(hyperbolic_files=hyperbolic_files,
                                                                    euclidean_files=euclidean_files)

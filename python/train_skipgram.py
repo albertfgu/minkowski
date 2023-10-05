@@ -2,11 +2,13 @@
 import os
 from itertools import product
 
-INPUT_FILE = '/home/ubuntu/data/wikipedia.txt'
+# INPUT_FILE = '/home/ubuntu/data/wikipedia.txt'
+INPUT_FILE = '/dfs/scratch1/albertgu/baseline-minkowski/wikipedia_clean.csv'
 INPUT_LABEL = INPUT_FILE.split('/')[-1].split('.')[0]
 
-FASTTEXT_DIR = '/home/ubuntu/fastText'
-MINKOWSKI_DIR = '/home/ubuntu/minkowski'
+# FASTTEXT_DIR = '/home/ubuntu/fastText'
+FASTTEXT  = 'build/minkowski'
+MINKOWSKI = 'build/minkowski'
 
 EPOCHS = 3
 T = 1e-5
@@ -27,7 +29,7 @@ def run_training(dim, epochs, lr, t, ws, min_count, neg, init_stddev):
                              '-ws-{}-minCount-{}-neg-{}-initStddev-{}'.format(
         INPUT_LABEL, dim, epochs, lr, t, ws, min_count, neg, init_stddev)
 
-    os.system('/home/ubuntu/minkowski-build/minkowski -input {} -output {} '
+    os.system(MINKOWSKI + ' -input {} -output {} '
               '-max-step-size 1.0 -dimension {} -start-lr {} -end-lr 0 '
               '-epochs {} -init-std-dev {} -min-count {} -t {} -window-size {} '
               '-number-negatives {} -threads 64'.format(
@@ -38,11 +40,11 @@ def run_training(dim, epochs, lr, t, ws, min_count, neg, init_stddev):
                             '-ws-{}-minCount-{}-neg-{}'.format(
         INPUT_LABEL, dim, epochs, lr, t, ws, min_count, neg)
 
-    os.system('/home/ubuntu/fastText-build-euc/fasttext skipgram -input {} '
-              '-output {} -dim {} -lr {} -epoch {} -minCount {} -minn 0 '
-              '-maxn 0 -t {} -ws {} -loss ns -neg {} -thread 64'.format(
-        INPUT_FILE, output_file_euclidean, dim, lr, epochs, min_count, t, ws,
-        neg))
+    # os.system('/home/ubuntu/fastText-build-euc/fasttext skipgram -input {} '
+              # '-output {} -dim {} -lr {} -epoch {} -minCount {} -minn 0 '
+              # '-maxn 0 -t {} -ws {} -loss ns -neg {} -thread 64'.format(
+        # INPUT_FILE, output_file_euclidean, dim, lr, epochs, min_count, t, ws,
+        # neg))
 
     return output_file_hyperbolic + '.csv', output_file_euclidean + '.vec'
 
@@ -72,8 +74,10 @@ def sweep_lr_and_dimension(learning_rates, dimensions):
 
 
 if __name__ == '__main__':
-    learning_rates = [0.1, 0.05, 0.01, 0.005]
-    dimensions = [5, 20, 50, 100]
+    # learning_rates = [0.1, 0.05, 0.01, 0.005]
+    learning_rates = [0.005]
+    # dimensions = [5, 20, 50, 100]
+    dimensions = [20]
 
     print('Train word embeddings for {} different settings.'.format(
         len(learning_rates) * len(dimensions)))

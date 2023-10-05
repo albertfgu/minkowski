@@ -22,14 +22,21 @@ protected:
     int64_t nexamples_;
     real* t_sigmoid;
 
+    std::shared_ptr<std::vector<real>> lengths_;
+    std::shared_ptr<std::vector<real>> bias_;
+    real acc_grad_source_len_;
+    real acc_grad_source_bias_;
+
     void precompute_sigmoid();
 
 public:
     Model(std::shared_ptr<std::vector<Vector>> vectors,
+          std::shared_ptr<std::vector<real>> lengths,
+          std::shared_ptr<std::vector<real>> bias,
           std::shared_ptr<Args> args);
     ~Model();
 
-    real binary_logistic(Vector& input, int32_t, bool, real);
+    real binary_logistic(int32_t, int32_t, bool, real);
 
     void log_bilinear_negative_sampling(int32_t source, std::vector<int32_t>& samples, real lr);
 
